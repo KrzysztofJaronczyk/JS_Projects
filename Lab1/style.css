@@ -33,8 +33,14 @@ button{
     color: aliceblue;
     cursor: pointer;
 }
-
-a{
+#container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+p{
     text-decoration: none;
     color: aliceblue;
 }
