@@ -19,7 +19,7 @@ body {
 
 input{
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px 30px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
@@ -32,6 +32,12 @@ button{
     background-color: #333;
     color: aliceblue;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover{
+    background-color: #ccc;
+    color: #333;
 }
 #container{
     display: flex;
@@ -43,4 +49,10 @@ button{
 p{
     text-decoration: none;
     color: aliceblue;
+    transition: 0.3s;
+}
+
+p:hover{
+    color: #ccc;
+    letter-spacing: 2px;
 }
