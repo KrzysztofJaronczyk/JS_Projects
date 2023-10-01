@@ -1,6 +1,5 @@
 const container = document.getElementById('container')
 const result = document.getElementById('result')
-
 const addFieldButton = document.querySelector('button')
 const resetButton = document.getElementById('reset')
 
@@ -8,6 +7,7 @@ resetButton.addEventListener('click', () => {
 	location.reload()
 })
 
+//add and delete fields
 addFieldButton.addEventListener('click', () => {
 	const containerDiv = document.createElement('div')
 	const newField = document.createElement('input')
@@ -28,55 +28,33 @@ addFieldButton.addEventListener('click', () => {
 	deleteButton.addEventListener('click', () => {
 		newField.remove()
 		deleteButton.remove()
-		//count numbers
-		const numbers = []
-		document.querySelectorAll('input').forEach(input => {
-			if (input.value) {
-				numbers.push(parseInt(input.value))
-				input.style.backgroundColor = 'white'
 
-				const suma = numbers.reduce((a, b) => a + b, 0)
-				const srednia = suma / numbers.length
-				const min = Math.min(...numbers)
-				const max = Math.max(...numbers)
-				result.innerHTML = ''
-				const wynik = document.createElement('p')
-				wynik.innerHTML = `Suma: ${suma} Średnia: ${srednia} Min: ${min} Max: ${max}`
-				result.appendChild(wynik)
-			} else {
-				input.style.backgroundColor = 'red'
-			}
-		})
+		countNumbers()
 	})
 })
 
-//if liczba value has changed
+//if any value has changed
 document.addEventListener('change', () => {
-	const numbers = []
-	document.querySelectorAll('input').forEach(input => {
-		if (input.value) {
-			numbers.push(parseInt(input.value))
-			input.style.backgroundColor = 'white'
+	countNumbers()
+})
 
-			const suma = numbers.reduce((a, b) => a + b, 0)
-			const srednia = suma / numbers.length
-			const min = Math.min(...numbers)
-			const max = Math.max(...numbers)
+function countNumbers(numbers = document.querySelectorAll('input'), result = document.getElementById('result')) {
+	const numbersArray = []
+	numbers.forEach(number => {
+		if (number.value) {
+			numbersArray.push(parseInt(number.value))
+			number.style.backgroundColor = 'white'
+
+			const suma = numbersArray.reduce((a, b) => a + b, 0)
+			const srednia = suma / numbersArray.length
+			const min = Math.min(...numbersArray)
+			const max = Math.max(...numbersArray)
 			result.innerHTML = ''
 			const wynik = document.createElement('p')
 			wynik.innerHTML = `Suma: ${suma} Średnia: ${srednia} Min: ${min} Max: ${max}`
 			result.appendChild(wynik)
 		} else {
-			input.style.backgroundColor = 'red'
+			number.style.backgroundColor = 'red'
 		}
 	})
-	// const suma = parseInt(liczba1.value) + parseInt(liczba2.value) + parseInt(liczba3.value)
-	// const srednia = suma / 3
-	// const min = Math.min(liczba1.value, liczba2.value, liczba3.value)
-	// const max = Math.max(liczba1.value, liczba2.value, liczba3.value)
-	// result.innerHTML = ''
-
-	// const wynik = document.createElement('p')
-	// result.innerHTML = `Suma: ${suma} Średnia: ${srednia} Min: ${min} Max: ${max}`
-	// container.appendChild(wynik)
-})
+}
