@@ -1,0 +1,82 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	background-color: #333;
+	font-size: 36px;
+	height: 100vh;
+	color: aliceblue;
+	font-size: 24px;
+}
+
+#slider {
+	position: relative;
+	width: 600px;
+	height: 400px;
+	margin: 100px auto 0 auto;
+	overflow: hidden;
+}
+#slider .slides {
+	display: flex;
+	animation-name: pociag-w-lewo;
+	animation-duration: 4s;
+	animation-delay: 1s;
+	animation-timing-function: ease-in-out;
+}
+
+#slider .slides .slide {
+	width: 600px;
+	height: 400px;
+	flex-shrink: 0;
+	background-size: cover;
+	background-position: center;
+}
+
+#slider .arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 50px;
+	height: 50px;
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+	cursor: pointer;
+	z-index: 1;
+}
+
+#slider .dots {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 90%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	z-index: 1;
+}
+
+#slider .dot {
+	height: 7px;
+	width: 7px;
+	background-color: aliceblue;
+	border-radius: 50%;
+	margin: 0 2px; /* Adjust this value to control the spacing between dots */
+}
+
+@keyframes pociag-w-lewo {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-2000px);
+	}
+}
