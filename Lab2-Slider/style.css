@@ -18,14 +18,20 @@ body {
 	width: 600px;
 	height: 400px;
 	margin: 100px auto 0 auto;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 #slider .slides {
+	display: flex;
+	transition: 1s;
+}
+
+#animation{
 	display: flex;
 	animation-name: pociag-w-lewo;
 	animation-duration: 4s;
 	animation-delay: 1s;
 	animation-timing-function: ease-in-out;
+	transition: 1s;
 }
 
 #slider .slides .slide {
@@ -70,6 +76,12 @@ body {
 	background-color: aliceblue;
 	border-radius: 50%;
 	margin: 0 2px; /* Adjust this value to control the spacing between dots */
+}
+
+#slider .dot.active {
+	background-color: #fff;
+	width: 9px;
+	height: 9px;
 }
 
 @keyframes pociag-w-lewo {
