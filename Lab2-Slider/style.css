@@ -18,14 +18,14 @@ body {
 	width: 600px;
 	height: 400px;
 	margin: 100px auto 0 auto;
-	/* overflow: hidden; */
+	overflow: hidden;
 }
 #slider .slides {
 	display: flex;
 	transition: 1s;
 }
 
-#animation{
+#animation {
 	display: flex;
 	animation-name: pociag-w-lewo;
 	animation-duration: 4s;

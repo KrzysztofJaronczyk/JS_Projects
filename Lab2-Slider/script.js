@@ -1,39 +1,57 @@
-const pauseBtn = document.querySelector('#sliderPauseButton');
-const sliderLeftBtn = document.querySelector('#sliderLeftButton');
-const sliderRightBtn = document.querySelector('#sliderRightButton');
-const slides = document.querySelectorAll('.slide');
+const slider = document.querySelector('.slider')
+const slides = document.querySelector('.slides')
+const dots = document.querySelectorAll('.dot')
+const slideWidth = 600
+let currentSlide = 0
+let autoSlideInterval
 
-let slideIndex = 0;
+function animateSlides() {
+	const offset = -currentSlide * slideWidth
+	slides.style.transform = `translateX(${offset}px)`
+}
 
-pauseBtn.addEventListener('click', () => {
-    console.log('pause');
-});
+function changeSlide(n) {
+	currentSlide += n
+	if (currentSlide < 0) currentSlide = 5
+	if (currentSlide > 5) currentSlide = 0
+	animateSlides()
+	updateDots()
+	clearInterval(autoSlideInterval)
+	autoSlideInterval = setInterval(autoSlide, 3000)
+}
 
-sliderRightBtn.addEventListener('click', () => {
-    console.log('slide right');
+function gotoSlide(n) {
+	currentSlide = n
+	animateSlides()
+	updateDots()
+	clearInterval(autoSlideInterval)
+	autoSlideInterval = setInterval(autoSlide, 3000)
+}
 
-    slides[slideIndex].classList.add('animation');
-});
+function updateDots() {
+	for (let i = 0; i < dots.length; i++) {
+		if (i === currentSlide) {
+			dots[i].classList.add('active')
+		} else {
+			dots[i].classList.remove('active')
+		}
+	}
+}
 
-sliderLeftBtn.addEventListener('click', () => {
-    console.log('slide left');
-});
+function autoSlide() {
+	changeSlide(1)
+}
 
-// jednorazowe wykonanie kodu po określonym czasie
-const timeoutRef = setTimeout(() => {
-	main.innerHTML = 'Msg from setTimeout'
-}, 2000)
+function toggleAutoSlide() {
+	if (autoSlideInterval) {
+		clearInterval(autoSlideInterval)
+		autoSlideInterval = null
+	} else {
+		autoSlideInterval = setInterval(autoSlide, 3000)
+	}
+}
 
-// wykonywanie kodu co określony czas
-let licznik = 0
-const intervalRef = setInterval(() => {
-	main.innerHTML = `Msg from setInterval: ${licznik++}`
-}, 4000)
-
-// kasujemy setInterval
-// clearInterval(intervalRef)
-
-// kasujemy setTimeout
-// clearTimeout(intervalRef)
-
-// window.requestAnimationFrame -use this if possible
+// Show the initial slide, update the dots, and start auto animation
+animateSlides()
+updateDots()
+autoSlideInterval = setInterval(autoSlide, 3000)

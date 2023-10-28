@@ -19,8 +19,8 @@
             <img id="six" src="https://picsum.photos/600/400" alt="" onclick="toggleAutoSlide()">
         </div>
 
-        <div id="left_arrow" class="arrow" onclick="changeSlide(-1)"><</div>
-        <div id="right_arrow" class="arrow" onclick="changeSlide(1)" style="left: 90%;">></div>
+        <div id="left_arrow" class="arrow" onclick="changeSlide(-1)">&lt;</div>
+        <div id="right_arrow" class="arrow" onclick="changeSlide(1)" style="left: 90%;">&gt;</div>
         <div class="dots">
             <div class="dot active" onclick="gotoSlide(0)"></div>
             <div class="dot" onclick="gotoSlide(1)"></div>
@@ -31,69 +31,6 @@
         </div>
 
     </div>
-    <main>
-    </main>
-
-    <script>
-        const slider = document.querySelector('.slider');
-        const slides = document.querySelector('.slides');
-        const dots = document.querySelectorAll('.dot');
-        const slideWidth = 600;
-        let currentSlide = 0;
-        let autoSlideInterval;
-
-        function animateSlides() {
-            const offset = -currentSlide * slideWidth;
-            slides.style.transform = `translateX(${offset}px)`;
-        }
-
-        function changeSlide(n) {
-            currentSlide += n;
-            if (currentSlide < 0) currentSlide = 5;
-            if (currentSlide > 5) currentSlide = 0;
-            animateSlides();
-            updateDots();
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = setInterval(autoSlide, 3000);
-        }
-
-        function gotoSlide(n) {
-            currentSlide = n;
-            animateSlides();
-            updateDots();
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = setInterval(autoSlide, 3000);
-        }
-
-        function updateDots() {
-            for (let i = 0; i < dots.length; i++) {
-                if (i === currentSlide) {
-                    dots[i].classList.add('active');
-                } else {
-                    dots[i].classList.remove('active');
-                }
-            }
-        }
-
-        function autoSlide() {
-            changeSlide(1);
-        }
-
-        function toggleAutoSlide() {
-            if (autoSlideInterval) {
-                clearInterval(autoSlideInterval);
-                autoSlideInterval = null;
-            } else {
-                autoSlideInterval = setInterval(autoSlide, 3000);
-            }
-        }
-
-        // Show the initial slide, update the dots, and start auto animation
-        animateSlides();
-        updateDots();
-        autoSlideInterval = setInterval(autoSlide, 3000);
-    </script>
-
     <script src="script.js"></script>
 </body>
 
