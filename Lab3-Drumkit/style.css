@@ -1,0 +1,161 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	position: absolute;
+	font-family: 'Montserrat', sans-serif;
+	background-color: #333;
+	height: 100vh;
+	width: 100vw;
+	color: aliceblue;
+	font-size: 24px;
+}
+
+audio {
+	display: none;
+}
+
+.inputs {
+	position: relative;
+	left: 50%;
+	top: 25%;
+	display: inline-block;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.canals{
+	position: relative;
+	top: 25%;
+	display: inline-block;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.canal{
+	position: relative;
+	top: 25%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.start-record {
+	width: 50px;
+	height: 50px;
+	background-color: black;
+	border-radius: 50%;
+	margin: 24px;
+}
+
+.start-record:hover {
+	cursor: pointer;
+}
+
+.start-record:active {
+	background-color: #333;
+}
+
+.record {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%);
+	width: 25px;
+	height: 25px;
+	background-color: red;
+	border-radius: 50%;
+	animation: pulse 1s infinite;
+}
+
+.record:hover {
+	cursor: pointer;
+}
+
+.stop-record {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 50px;
+	height: 50px;
+	background-color: black;
+	border-radius: 50%;
+}
+
+.stop-record:hover {
+	cursor: pointer;
+}
+
+
+svg{
+	position: relative;
+	width: 40px;
+	height: 40px;
+	margin: 16px;
+}
+
+svg:hover{
+	cursor: pointer;
+}
+
+
+
+/* @keyframes pulse {
+	0% {
+		transform: translate(-50%, -50%) scale(1);
+	}
+	50% {
+		transform: translate(-50%, -50%) scale(1.2);
+	}
+	100% {
+		transform: translate(-50%, -50%) scale(1);
+	}
+} */
+
+/* buttons */
+
+input {
+	padding: 10px;
+	margin: 10px 30px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+button {
+	padding: 10px;
+	margin: 10px 0;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	background-color: #333;
+	color: aliceblue;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+button:hover {
+	background-color: #ccc;
+	color: #333;
+}
+#container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+p {
+	text-decoration: none;
+	color: aliceblue;
+	transition: 0.3s;
+}
+
+p:hover {
+	color: #ccc;
+	letter-spacing: 2px;
+}
