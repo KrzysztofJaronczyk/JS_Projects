@@ -25,10 +25,9 @@ audio {
 	display: inline-block;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
 }
 
-.canals{
+.canals {
 	position: relative;
 	top: 25%;
 	display: inline-block;
@@ -37,7 +36,7 @@ audio {
 	width: 100%;
 }
 
-.canal{
+.canal {
 	position: relative;
 	top: 25%;
 	display: flex;
@@ -93,19 +92,16 @@ audio {
 	cursor: pointer;
 }
 
-
-svg{
+svg {
 	position: relative;
 	width: 40px;
 	height: 40px;
 	margin: 16px;
 }
 
-svg:hover{
+svg:hover {
 	cursor: pointer;
 }
-
-
 
 /* @keyframes pulse {
 	0% {
@@ -156,7 +152,19 @@ p {
 	transition: 0.3s;
 }
 
-p:hover {
+.play-all {
+	position: fixed;
+	top: 50vh;
+	left: 70%;
+}
+
+p {
+	position: relative;
+	display: inline-block;
+	font-size: 20px;
 	color: #ccc;
-	letter-spacing: 2px;
+	text-align: center;
+	margin: 15px;
+	top: -28px;
+	left: -20px;
 }

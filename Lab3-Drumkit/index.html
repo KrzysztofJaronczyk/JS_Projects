@@ -20,8 +20,18 @@
     <audio src="./sounds/tom.wav" controls id="s8"></audio>
     <audio src="./sounds/tink.wav" controls id="s9"></audio>
 
+    <div class="play-all" id="play-all">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z">
+            </path>
+        </svg>
+        <p>Zagraj zaznaczone kanały</p>
+    </div>
+
     <div class="canals" id="canals">
-        <div class="canal">
+        <div class="canal" id="1">
             <div class="start-record">
                 <button class="record"></button>
             </div>
@@ -41,7 +51,7 @@
             </svg>
             <input type="checkbox" id="canal1" name="canal1" value="canal1">
         </div>
-        <div class="canal">
+        <div class="canal" id="2">
             <div class="start-record">
                 <button class="record"></button>
             </div>
@@ -61,7 +71,7 @@
             </svg>
             <input type="checkbox" id="canal1" name="canal1" value="canal1">
         </div>
-        <div class="canal">
+        <div class="canal" id="3">
             <div class="start-record">
                 <button class="record"></button>
             </div>
@@ -81,7 +91,7 @@
             </svg>
             <input type="checkbox" id="canal1" name="canal1" value="canal1">
         </div>
-        <div class="canal">
+        <div class="canal" id="4">
             <div class="start-record">
                 <button class="record"></button>
             </div>
@@ -124,28 +134,47 @@
             'l': document.querySelector('#s9')
         }
 
+
+        //recording
+
+
+        const recordedCanals = [];
+        document.addEventListener('keypress', onKeyPress);
+
         function onKeyPress(event) {
-            const sound = KeyToSound[event.key]
-            playSound(sound)
-        }
-        function playSound(sound) {
-            sound.currentTime = 0
-            sound.play()
+            const sound = KeyToSound[event.key];
+            if (sound) {
+                playSound(sound);
+                // recordedCanals.push(event.key);
+                recordedCanals.push(sound.id);
+                //save time of recording
+                recordedCanals.push(Date.now());
+                console.log(recordedCanals);
+            }
         }
 
-        // Get the button and canals container
+
+        function playSound(sound) {
+            sound.currentTime = 0;
+            sound.play();
+        }
+
+
+
+
         const addFieldButton = document.getElementById('addFieldButton');
         const canalsContainer = document.getElementById('canals');
         const reset = document.getElementById('reset');
 
         // Function to create a new canal
         function createNewCanal() {
+            const number = canalsContainer.children.length + 1
             const newCanal = document.createElement('div');
+            newCanal.id = number;
             newCanal.className = 'canal';
 
-            // You can copy your existing canal content here or modify it as needed.
             newCanal.innerHTML = `
-    <div class="canal">
+    <div class="canal" id="${newCanal.id}">
             <div class="start-record">
                 <button class="record"></button>
             </div>
