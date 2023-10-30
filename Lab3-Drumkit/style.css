@@ -27,9 +27,23 @@ audio {
 	align-items: center;
 }
 
+.metronome{
+	position: relative;
+	top: 5%;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-items: center;
+}
+
+.metronome:hover {
+	cursor: pointer;
+}
+
 .canals {
 	position: relative;
-	top: 25%;
+	top: 15%;
 	display: inline-block;
 	justify-content: center;
 	align-items: center;
@@ -153,18 +167,17 @@ p {
 }
 
 .play-all {
-	position: fixed;
-	top: 50vh;
-	left: 70%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 10vh;
+	left: 0;
 }
 
 p {
-	position: relative;
-	display: inline-block;
 	font-size: 20px;
 	color: #ccc;
-	text-align: center;
-	margin: 15px;
-	top: -28px;
-	left: -20px;
+
 }
