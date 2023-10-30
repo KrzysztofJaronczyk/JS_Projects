@@ -1,8 +1,9 @@
- // Function to create a new canal
- function createNewCanal() {
-    const number = canalsContainer.children.length + 1
+function createNewCanal() {
+ const canalsContainer = document.getElementById('canalsContainer');
+    const newCanalId = canalsContainer.children.length + 1;
+
     const newCanal = document.createElement('div');
-    newCanal.id = number;
+    newCanal.id = newCanalId;
     newCanal.className = 'canal';
 
     newCanal.innerHTML = `
@@ -20,57 +21,16 @@
             </svg>
         </div>
     `;
-    canalsContainer.appendChild(newCanal);
+    canals.appendChild(newCanal);
 
-    // Add event listeners for the new canal's record and play buttons
-    const newRecordBtn = newCanal.querySelector('.record-btn');
-    const newPlayBtn = newCanal.querySelector('.play-btn');
-    newRecordBtn.addEventListener('click', () => {
-        handleRecordClick(newRecordBtn, newPlayBtn);
-    });
-    newPlayBtn.addEventListener('click', () => {
-        handlePlayClick(newRecordBtn, newPlayBtn);
-    });
 
     // Add an event listener to the trash can (last SVG) in the new canal
     const deleteButton = newCanal.querySelector('.delete-canal');
     deleteButton.addEventListener('click', function () {
         // Remove the parent .canal element when the trash can is clicked
-        canalsContainer.removeChild(newCanal);
+        canals.removeChild(newCanal);
     });
 }
-
-function handleRecordClick(recordBtn, playBtn) {
-    if (isRecording) {
-        recording = [];
-        isRecording = false;
-        recordBtn.style.fill = 'none';
-    } else {
-        isRecording = true;
-        isPlaying = false; // Stop playback if it's in progress
-        recording = []; // Clear previous recording
-        recordBtn.style.fill = 'red';
-    }
-}
-
-function handlePlayClick(recordBtn, playBtn) {
-    if (!isPlaying && recording.length > 0) {
-        isPlaying = true;
-        if (isRecording) {
-            isRecording = false;
-            recordBtn.style.fill = 'none';
-        }
-        playBtn.style.fill = 'green';
-        playRecording();
-        if (isPlaying) {
-            setTimeout(() => {
-                isPlaying = false;
-                playBtn.style.fill = 'none';
-            }, recording[recording.length - 1][1] - recording[0][1] + 1000); // +1s to look good
-        }
-    }
-}
-
 addFieldButton.addEventListener('click', createNewCanal);
 
 reset.addEventListener('click', function () {
