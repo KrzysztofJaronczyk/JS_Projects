@@ -117,15 +117,17 @@
             'l': document.querySelector('#s9')
         }
 
+        // Create an array to store recording data for each channel
+        const recordingData = [];
+
         // Recording and Playback
         let isRecording = false;
         let isPlaying = false;
-        let recording = [];
 
         document.addEventListener('keypress', function (e) {
             if (isRecording) {
-                recording.push([e.key, Date.now()]);
-                console.log(recording);
+                recordChannelData(e.key, Date.now());
+                console.log(recordingData);
             }
             playSound(e.key);
         });
@@ -139,55 +141,67 @@
         }
 
         // Record and Playback Buttons
-        const recordBtn = document.querySelectorAll('.canal svg[id^="record-btn"]');
-        const playBtn = document.querySelectorAll('.canal svg[id^="play-btn"]');
+        const recordBtns = document.querySelectorAll('.canal svg[id^="record-btn"]');
+        const playBtns = document.querySelectorAll('.canal svg[id^="play-btn"]');
 
-        recordBtn.forEach((btn, index) => {
+        recordBtns.forEach((btn, index) => {
             btn.addEventListener('click', () => {
                 if (isRecording) {
-                    recording = [];
-                    isRecording = false;
+                    stopRecording();
                     btn.style.fill = 'none';
                 } else {
-                    isRecording = true;
-                    isPlaying = false; // Stop playback if it's in progress
-                    recording = []; // Clear previous recording
+                    startRecording(index);
                     btn.style.fill = 'red';
                 }
             });
         });
 
-        playBtn.forEach((btn, index) => {
+        playBtns.forEach((btn, index) => {
             btn.addEventListener('click', () => {
-                if (!isPlaying && recording.length > 0) {
-                    isPlaying = true;
-                    if (isRecording) {
-                        isRecording = false;
-                        recordBtn[index].style.fill = 'none';
-                    }
+                if (!isPlaying && recordingData[index].length > 0) {
+                    stopRecording();
+                    recordBtns[index].style.fill = 'none';
+                    startPlayback(index);
                     btn.style.fill = 'green';
-                    playRecording(index);
-                    if (isPlaying) {
-                        setTimeout(() => {
-                            isPlaying = false;
-                            btn.style.fill = 'none';
-                        }, recording[recording.length - 1][1] - recording[0][1] + 1000); // +1s to look good
-                    }
+                    setTimeout(() => {
+                        btn.style.fill = 'none';
+                    }, recordingData[index][recordingData[index].length - 1][1] - recordingData[index][0][1] + 500);
                 }
+
             });
         });
 
+        function startRecording(channelIndex) {
+            isRecording = true;
+            isPlaying = false; // Stop playback if it's in progress
+            recordingData[channelIndex] = []; // Clear previous recording
+        }
 
-        function playRecording(index) {
-            let startTime = recording[0][1];
-            recording.forEach((sound) => {
-                const delay = sound[1] - startTime;
-                setTimeout(() => {
-                    playSound(sound[0]);
-                }, delay);
+        function stopRecording() {
+            isRecording = false;
+        }
+
+        function recordChannelData(key, timestamp) {
+            recordingData.forEach((channel, index) => {
+                if (isRecording && index === recordingData.length - 1) {
+                    channel.push([key, timestamp]);
+                }
             });
         }
+
+        function startPlayback(channelIndex) {
+            if (recordingData[channelIndex] && recordingData[channelIndex].length > 0) {
+                let startTime = recordingData[channelIndex][0][1];
+                recordingData[channelIndex].forEach((sound) => {
+                    const delay = sound[1] - startTime;
+                    setTimeout(() => {
+                        playSound(sound[0]);
+                    }, delay);
+                });
+            }
+        }
     </script>
+
 
 
 

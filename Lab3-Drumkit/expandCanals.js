@@ -1,36 +1,36 @@
-// Function to create a new canal
-
-
-const addFieldButton = document.getElementById('addFieldButton');
-const canalsContainer = document.getElementById('canals');
-const reset = document.getElementById('reset');
-
-
-function createNewCanal() {
+ // Function to create a new canal
+ function createNewCanal() {
     const number = canalsContainer.children.length + 1
     const newCanal = document.createElement('div');
     newCanal.id = number;
     newCanal.className = 'canal';
 
     newCanal.innerHTML = `
-<div class="canal" id="${newCanal.id}">
-    <svg id="record-btn${newCanal.id}" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <div class="canal" id="${newCanal.id}">
+            <svg id="record-btn${newCanal.id}" class="record-btn" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path>
-              </svg>
-            <svg id="play-btn${newCanal.id}" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            </svg>
+            <svg id="play-btn${newCanal.id}" class="play-btn" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z">
-                </path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z"></path>
             </svg>
             <input type="checkbox" id="canal${newCanal.id}">
             <svg class="delete-canal" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
-</svg>
-</div>
-`;
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+            </svg>
+        </div>
+    `;
     canalsContainer.appendChild(newCanal);
+
+    // Add event listeners for the new canal's record and play buttons
+    const newRecordBtn = newCanal.querySelector('.record-btn');
+    const newPlayBtn = newCanal.querySelector('.play-btn');
+    newRecordBtn.addEventListener('click', () => {
+        handleRecordClick(newRecordBtn, newPlayBtn);
+    });
+    newPlayBtn.addEventListener('click', () => {
+        handlePlayClick(newRecordBtn, newPlayBtn);
+    });
 
     // Add an event listener to the trash can (last SVG) in the new canal
     const deleteButton = newCanal.querySelector('.delete-canal');
@@ -40,8 +40,38 @@ function createNewCanal() {
     });
 }
 
-addFieldButton.addEventListener('click', createNewCanal);
+function handleRecordClick(recordBtn, playBtn) {
+    if (isRecording) {
+        recording = [];
+        isRecording = false;
+        recordBtn.style.fill = 'none';
+    } else {
+        isRecording = true;
+        isPlaying = false; // Stop playback if it's in progress
+        recording = []; // Clear previous recording
+        recordBtn.style.fill = 'red';
+    }
+}
 
+function handlePlayClick(recordBtn, playBtn) {
+    if (!isPlaying && recording.length > 0) {
+        isPlaying = true;
+        if (isRecording) {
+            isRecording = false;
+            recordBtn.style.fill = 'none';
+        }
+        playBtn.style.fill = 'green';
+        playRecording();
+        if (isPlaying) {
+            setTimeout(() => {
+                isPlaying = false;
+                playBtn.style.fill = 'none';
+            }, recording[recording.length - 1][1] - recording[0][1] + 1000); // +1s to look good
+        }
+    }
+}
+
+addFieldButton.addEventListener('click', createNewCanal);
 
 reset.addEventListener('click', function () {
     location.reload();
