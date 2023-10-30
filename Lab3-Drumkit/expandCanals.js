@@ -1,9 +1,7 @@
 function createNewCanal() {
- const canalsContainer = document.getElementById('canalsContainer');
-    const newCanalId = canalsContainer.children.length + 1;
-
+    const number = canals.children.length + 1;
     const newCanal = document.createElement('div');
-    newCanal.id = newCanalId;
+    newCanal.id = number;
     newCanal.className = 'canal';
 
     newCanal.innerHTML = `
@@ -22,6 +20,7 @@ function createNewCanal() {
         </div>
     `;
     canals.appendChild(newCanal);
+
 
 
     // Add an event listener to the trash can (last SVG) in the new canal

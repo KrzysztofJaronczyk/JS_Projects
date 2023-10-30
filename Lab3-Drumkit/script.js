@@ -91,16 +91,6 @@ function startPlayback(channelIndex) {
     }
 }
 
-// Play Selected Channels Button
-const playSelectedButton = document.getElementById('play-selected');
-playSelectedButton.addEventListener('click', () => {
-    console.log(selectedChannels);
-    // Play all selected channels
-    selectedChannels.forEach((channelIndex) => {
-        startPlayback(channelIndex);
-        playBtns[channelIndex].style.fill = 'green';
-    });
-});
 
 // Play All Channels Button
 const playAllButton = document.getElementById('play-all');
@@ -115,16 +105,29 @@ playAllButton.addEventListener('click', () => {
 });
 
 // Checkbox event listeners to track selected channels
-const checkboxes = document.querySelectorAll('.canal input[type="checkbox"]');
-checkboxes.forEach((checkbox, index) => {
-    checkbox.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            selectedChannels.push(index);
-        } else {
-            const selectedIndex = selectedChannels.indexOf(index);
-            if (selectedIndex > -1) {
-                selectedChannels.splice(selectedIndex, 1);
-            }
+//check canals
+const canals = document.getElementById('canals');
+canals.addEventListener('change', (e) => {
+    const checkbox = e.target;
+    const canal = checkbox.parentElement;
+    const canalId = parseInt(canal.id);
+    if (checkbox.checked) {
+        selectedChannels.push(canalId);
+    } else {
+        selectedChannels.splice(selectedChannels.indexOf(canalId), 1);
+    }
+    console.log(selectedChannels);
+
+});
+
+const playSelectedButton = document.getElementById('play-selected');
+
+playSelectedButton.addEventListener('click', () => {
+    // Play selected channels
+    playBtns.forEach((btn, index) => {
+        if (selectedChannels.includes(index+1) && recordingData[index].length > 0) {
+            startPlayback(index);
+            btn.style.fill = 'green';
         }
     });
 });
