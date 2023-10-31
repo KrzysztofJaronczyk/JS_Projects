@@ -21,13 +21,13 @@ audio {
 .inputs {
 	position: relative;
 	left: 50%;
-	top: 25%;
+	top: 15%;
 	display: inline-block;
 	justify-content: center;
 	align-items: center;
 }
 
-.metronome{
+.metronome {
 	position: relative;
 	top: 5%;
 	left: 50%;
@@ -39,6 +39,22 @@ audio {
 
 .metronome:hover {
 	cursor: pointer;
+}
+
+.metronome-active {
+	animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
 }
 
 .canals {
@@ -179,5 +195,4 @@ p {
 p {
 	font-size: 20px;
 	color: #ccc;
-
 }
