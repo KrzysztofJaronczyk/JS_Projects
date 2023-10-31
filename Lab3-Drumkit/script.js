@@ -56,13 +56,15 @@ playBtns.forEach((btn, index) => {
 	btn.addEventListener('click', () => {
 		if (!isPlaying && recordingData[index].length > 0) {
 			stopRecording()
+			//clear style
+			recordBtns[index].style.fill = 'none'
 			startPlayback(index)
-			
+
 			btn.style.fill = 'green'
 			//Clear style when playback is done
 			setTimeout(() => {
-				btn.style.fill = 'none';
-			}, recordingData[index][recordingData[index].length - 1][1] - recordingData[index][0][1] + 500);
+				btn.style.fill = 'none'
+			}, recordingData[index][recordingData[index].length - 1][1] - recordingData[index][0][1] + 500)
 		}
 	})
 })
@@ -136,6 +138,9 @@ playSelectedButton.addEventListener('click', () => {
 		if (selectedChannels.includes(index + 1) && recordingData[index].length > 0) {
 			startPlayback(index)
 			btn.style.fill = 'green'
+			setTimeout(() => {
+				btn.style.fill = 'none'
+			}, recordingData[index][recordingData[index].length - 1][1] - recordingData[index][0][1] + 500)
 		}
 	})
 
@@ -144,9 +149,15 @@ playSelectedButton.addEventListener('click', () => {
 	for (let i = 0; i < newChannelCount; i++) {
 		const newChannelIndex = playBtns.length + i
 		if (selectedChannels.includes(newChannelIndex + 1) && recordingData[newChannelIndex].length > 0) {
+			stopRecording()
+			const newChannelRecordButton = document.querySelector(`#record-btn${newChannelIndex + 1}`)
+			newChannelRecordButton.style.fill = 'none'
 			startPlayback(newChannelIndex)
 			const newChannelPlayButton = document.querySelector(`#play-btn${newChannelIndex + 1}`)
 			newChannelPlayButton.style.fill = 'green'
+			setTimeout(() => {
+				newChannelPlayButton.style.fill = 'none'
+			}, recordingData[newChannelIndex][recordingData[newChannelIndex].length - 1][1] - recordingData[newChannelIndex][0][1] + 500)
 		}
 	}
 })
@@ -168,9 +179,16 @@ function setupChannelListeners(channelIndex) {
 	const playButton = document.querySelector(`#play-btn${channelIndex}`)
 	playButton.addEventListener('click', () => {
 		if (!isPlaying && recordingData[channelIndex - 1].length > 0) {
+			stopRecording()
+			//clear style
+			recordButton.style.fill = 'none'
 			// Subtract 1 to match the array index
 			startPlayback(channelIndex - 1) // Subtract 1 to match the array index
 			playButton.style.fill = 'green'
+			//Clear style when playback is done
+			setTimeout(() => {
+				playButton.style.fill = 'none'
+			}, recordingData[channelIndex - 1][recordingData[channelIndex - 1].length - 1][1] - recordingData[channelIndex - 1][0][1] + 500)
 		}
 	})
 }
