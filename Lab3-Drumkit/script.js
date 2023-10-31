@@ -8,6 +8,24 @@ const KeyToSound = {
 	j: document.querySelector('#s7'),
 	k: document.querySelector('#s8'),
 	l: document.querySelector('#s9'),
+	q: document.querySelector('#s10'),
+	w: document.querySelector('#s11'),
+	e: document.querySelector('#s12'),
+	r: document.querySelector('#s13'),
+	t: document.querySelector('#s14'),
+	y: document.querySelector('#s15'),
+	u: document.querySelector('#s16'),
+	i: document.querySelector('#s17'),
+	o: document.querySelector('#s18'),
+	p: document.querySelector('#s19'),
+	z: document.querySelector('#s20'),
+	x: document.querySelector('#s21'),
+	c: document.querySelector('#s22'),
+	v: document.querySelector('#s23'),
+	b: document.querySelector('#s24'),
+	n: document.querySelector('#s25'),
+	m: document.querySelector('#s26'),
+	
 }
 
 // Create an array to store recording data for each channel
@@ -149,7 +167,6 @@ playSelectedButton.addEventListener('click', () => {
 	for (let i = 0; i < newChannelCount; i++) {
 		const newChannelIndex = playBtns.length + i
 		if (selectedChannels.includes(newChannelIndex + 1) && recordingData[newChannelIndex].length > 0) {
-			stopRecording()
 			const newChannelRecordButton = document.querySelector(`#record-btn${newChannelIndex + 1}`)
 			newChannelRecordButton.style.fill = 'none'
 			startPlayback(newChannelIndex)
@@ -179,13 +196,10 @@ function setupChannelListeners(channelIndex) {
 	const playButton = document.querySelector(`#play-btn${channelIndex}`)
 	playButton.addEventListener('click', () => {
 		if (!isPlaying && recordingData[channelIndex - 1].length > 0) {
-			stopRecording()
-			//clear style
-			recordButton.style.fill = 'none'
-			// Subtract 1 to match the array index
 			startPlayback(channelIndex - 1) // Subtract 1 to match the array index
 			playButton.style.fill = 'green'
-			//Clear style when playback is done
+
+			// Clear style when playback is done
 			setTimeout(() => {
 				playButton.style.fill = 'none'
 			}, recordingData[channelIndex - 1][recordingData[channelIndex - 1].length - 1][1] - recordingData[channelIndex - 1][0][1] + 500)
