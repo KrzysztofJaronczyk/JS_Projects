@@ -9,8 +9,8 @@ const notePanel = document.querySelector('.note-panel')
 const category = document.querySelector('#category')
 const textarea = document.querySelector('#text')
 const error = document.querySelector('.error')
-let selectedValue
 
+let selectedValue
 let cardId = 0
 
 const openPanel = () => {
@@ -41,13 +41,14 @@ const createNote = () => {
 	cardId++
 	newNote.innerHTML = ` <div class="note-header">
 	<div class="note-title">${selectedValue}</div>
-	<button class="delete-note">
+	<button class="delete-note" onclick="deleteNote(${newNote.id})">
 		<i class="fas fa-times icon"></i>
 	</button>
 </div>
 <div class="note-body">
 	${textarea.value}
 </div>`
+	checkColor(newNote)
 }
 
 const selectValue = () => {
@@ -55,6 +56,28 @@ const selectValue = () => {
 	// console.log(selectedValue)
 }
 
+const checkColor = note => {
+	// console.log(selectedValue)
+	switch (selectedValue) {
+		case 'Work':
+			note.style.backgroundColor = 'green'
+			break
+		case 'Free Time':
+			note.style.backgroundColor = 'red'
+			break
+	}
+}
+
+const deleteNote = id => {
+	const noteToDelete = document.getElementById(id)
+	noteArea.removeChild(noteToDelete)
+}
+
+const deleteAllNotes = () => {
+	noteArea.innerHTML = ''
+}
+
 addBtn.addEventListener('click', openPanel)
 cancelBtn.addEventListener('click', closePanel)
 saveBtn.addEventListener('click', addNote)
+deleteAllBtn.addEventListener('click', deleteAllNotes)
