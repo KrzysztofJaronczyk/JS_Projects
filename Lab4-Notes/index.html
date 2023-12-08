@@ -20,14 +20,24 @@
         </div>
     </div>
 
+    <div class="pinned-area">
+        <h1 style="position: absolute;">Pinned notes</h1>
+    </div>
+
     <div class="note-area">
-        <!-- <div class="note">
+        <h1 style="position: absolute;">Notes</h1>
+        <div class="note">
             <div class="note-header">
                 <div class="note-title">Note1</div>
+
                 <button class="delete-note">
                     <i class="fas fa-times icon"></i>
                 </button>
             </div>
+            <div class="note-header">
+
+            <div class="note-category">Note1</div>
+</div>
             <div class="note-body">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam fugit, ipsum vel maxime eligendi vero
                 corrupti illo nihil excepturi nulla.
@@ -45,17 +55,20 @@
                 tenetur, nulla dolorum. Incidunt pariatur in eveniet sequi ducimus consequuntur magnam voluptatibus quae
                 qui necessitatibus reprehenderit reiciendis asperiores eligendi illo veniam sint et quia, iste dolor.
             </div>
-        </div> -->
+        </div>
     </div>
 
     <div class="note-panel">
         <h2>Add note</h2>
+        <label for="title">Enter note title</label>
+        <textarea id="title" placeholder="Enter note title"></textarea>
         <label for="category">Select category</label>
         <select id="category" onchange="selectValue()">
             <option value="0" disabled selected>Select category</option>
             <option value="1">Work</option>
             <option value="2">Free Time</option>
-            <option value="3">Other</option>
+            <option value="3">Study</option>
+            <option value="4">Other</option>
         </select>
 
         <label for="text">Enter note info</label>

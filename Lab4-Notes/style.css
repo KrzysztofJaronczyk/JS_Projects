@@ -51,6 +51,14 @@ body {
 	padding: 20px;
 }
 
+.pinned-area {
+	display: flex;
+	align-items: start;
+	flex-wrap: wrap;
+	padding: 20px;
+	padding-bottom: 100px;
+}
+
 .note {
 	margin: 40px 20px;
 	width: 240px;
@@ -69,6 +77,14 @@ body {
 .note-header .delete-note {
 	background: none;
 	font-size: 20px;
+	border: none;
+	cursor: pointer;
+}
+
+.edit-note,
+.pin-note {
+	background: none;
+	font-size: 14px;
 	border: none;
 	cursor: pointer;
 }
