@@ -10,6 +10,7 @@ const notePanel = document.querySelector('.note-panel')
 const category = document.querySelector('#category')
 const textarea = document.querySelector('#text')
 const mainTitle = document.querySelector('#title')
+const date = document.querySelector('.date')
 
 const error = document.querySelector('.error')
 
@@ -37,6 +38,7 @@ const addNote = () => {
 			noteToEdit.querySelector('.note-main-title').innerText = mainTitle.value
 			noteToEdit.querySelector('.note-title').innerText = selectedValue
 			noteToEdit.querySelector('.note-body').innerText = textarea.value
+			noteToEdit.querySelector('.date').innerText = new Date().toLocaleString()
 			checkColor(noteToEdit)
 			editMode = null
 			saveToLocalStorage()
@@ -71,7 +73,9 @@ const createNote = () => {
     </div>
     <div class="note-header">
         <div class="note-title">${selectedValue}</div>
-    </div>`
+    </div>
+	<div class="date">${new Date().toLocaleString()}</div>
+	`
 	checkColor(newNote)
 
 	if (newNote.classList.contains('pinned')) {
@@ -125,6 +129,7 @@ const saveToLocalStorage = () => {
 			content: note.querySelector('.note-body').innerText,
 			color: note.style.backgroundColor,
 			pin: note.classList.contains('pinned'),
+			date: note.querySelector('.date').innerText,
 			createdAt: new Date().toISOString(),
 		}
 
@@ -180,7 +185,9 @@ const createNoteElement = noteObj => {
         </div>
         <div class="note-header">
             <div class="note-title">${noteObj.title}</div>
-        </div>`
+        </div>
+		<div class="date">${noteObj.date}</div>
+		`
 
 	if (noteObj.pin) {
 		newNote.classList.add('pinned')
