@@ -120,7 +120,8 @@ body {
 }
 
 .note-panel #text,
-.note-panel #category {
+.note-panel #category,
+.note-panel #title {
 	margin-bottom: 20px;
 	padding: 10px 20px;
 	width: 100%;

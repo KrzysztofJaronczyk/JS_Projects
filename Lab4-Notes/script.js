@@ -9,11 +9,13 @@ const pinnedArea = document.querySelector('.pinned-area')
 const notePanel = document.querySelector('.note-panel')
 const category = document.querySelector('#category')
 const textarea = document.querySelector('#text')
+const mainTitle = document.querySelector('#title')
+
 const error = document.querySelector('.error')
 
 let selectedValue
-let cardId = 0
-let editMode = false
+let cardId = 1
+let editMode = null
 
 const openPanel = () => {
 	notePanel.style.display = 'flex'
@@ -24,16 +26,20 @@ const closePanel = () => {
 	error.style.visibility = 'hidden'
 	textarea.value = ''
 	category.selectedIndex = 0
+	mainTitle.value = ''
+	editMode = null
 }
 
 const addNote = () => {
-	if (textarea.value !== '' && category.selectedIndex !== 0) {
-		if (editMode) {
+	if (textarea.value !== '' && category.selectedIndex !== 0 && mainTitle.value !== '') {
+		if (editMode !== null) {
 			const noteToEdit = document.getElementById(editMode)
+			noteToEdit.querySelector('.note-main-title').innerText = mainTitle.value
 			noteToEdit.querySelector('.note-title').innerText = selectedValue
 			noteToEdit.querySelector('.note-body').innerText = textarea.value
 			checkColor(noteToEdit)
-			editMode = false
+			editMode = null
+			saveToLocalStorage()
 		} else {
 			createNote()
 		}
@@ -42,13 +48,14 @@ const addNote = () => {
 		error.style.visibility = 'visible'
 	}
 }
+
 const createNote = () => {
 	const newNote = document.createElement('div')
 	newNote.classList.add('note')
 	newNote.setAttribute('id', cardId)
 	cardId++
 	newNote.innerHTML = ` <div class="note-header">
-        <div class="note-title">${selectedValue}</div>
+        <div class="note-main-title">${mainTitle.value}</div>
         <button class="delete-note" onclick="deleteNote(${newNote.id})">
             <i class="fas fa-times icon"></i>
         </button>
@@ -61,10 +68,17 @@ const createNote = () => {
     </div>
     <div class="note-body">
         ${textarea.value}
+    </div>
+    <div class="note-header">
+        <div class="note-title">${selectedValue}</div>
     </div>`
 	checkColor(newNote)
 
-	noteArea.appendChild(newNote)
+	if (newNote.classList.contains('pinned')) {
+		pinnedArea.appendChild(newNote)
+	} else {
+		noteArea.appendChild(newNote)
+	}
 
 	saveToLocalStorage()
 }
@@ -72,6 +86,7 @@ const createNote = () => {
 const loadNote = id => {
 	const noteToEdit = document.getElementById(id)
 	openPanel()
+	mainTitle.value = noteToEdit.querySelector('.note-main-title').innerText
 	textarea.value = noteToEdit.querySelector('.note-body').innerText
 	const noteTitle = noteToEdit.querySelector('.note-title').innerText
 
@@ -81,6 +96,7 @@ const loadNote = id => {
 			break
 		}
 	}
+
 	editMode = id
 }
 
@@ -96,6 +112,7 @@ const pinNote = id => {
 
 	saveToLocalStorage()
 }
+
 const saveToLocalStorage = () => {
 	const pinnedNotes = []
 	const regularNotes = []
@@ -103,6 +120,7 @@ const saveToLocalStorage = () => {
 	document.querySelectorAll('.note').forEach(note => {
 		const noteObj = {
 			id: note.id,
+			mainTitle: note.querySelector('.note-main-title').innerText,
 			title: note.querySelector('.note-title').innerText,
 			content: note.querySelector('.note-body').innerText,
 			color: note.style.backgroundColor,
@@ -116,9 +134,11 @@ const saveToLocalStorage = () => {
 			regularNotes.push(noteObj)
 		}
 	})
+
 	localStorage.setItem('pinnedNotes', JSON.stringify(pinnedNotes))
 	localStorage.setItem('regularNotes', JSON.stringify(regularNotes))
 }
+
 const loadFromLocalStorage = () => {
 	const storedPinnedNotes = localStorage.getItem('pinnedNotes')
 	const storedRegularNotes = localStorage.getItem('regularNotes')
@@ -144,11 +164,11 @@ const createNoteElement = noteObj => {
 	newNote.style.backgroundColor = noteObj.color
 	newNote.innerHTML = `
         <div class="note-header">
-            <div class="note-title">${noteObj.title}</div>
+            <div class="note-main-title">${noteObj.mainTitle}</div>
             <button class="delete-note" onclick="deleteNote(${noteObj.id})">
                 <i class="fas fa-times icon"></i>
             </button>
-            <button class="edit-note" onclick="editNote(${noteObj.id})">
+            <button class="edit-note" onclick="loadNote(${noteObj.id})">
                 <i class="fas fa-edit icon"></i>
             </button>
             <button class="pin-note" onclick="pinNote(${noteObj.id})">
@@ -157,6 +177,9 @@ const createNoteElement = noteObj => {
         </div>
         <div class="note-body">
             ${noteObj.content}
+        </div>
+        <div class="note-header">
+            <div class="note-title">${noteObj.title}</div>
         </div>`
 
 	if (noteObj.pin) {
@@ -192,7 +215,7 @@ const checkColor = note => {
 
 const deleteNote = id => {
 	const noteToDelete = document.getElementById(id)
-	noteArea.removeChild(noteToDelete)
+	noteToDelete.parentNode.removeChild(noteToDelete)
 	saveToLocalStorage()
 }
 
