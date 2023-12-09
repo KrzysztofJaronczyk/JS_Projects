@@ -11,6 +11,8 @@ const category = document.querySelector('#category')
 const textarea = document.querySelector('#text')
 const mainTitle = document.querySelector('#title')
 const date = document.querySelector('.date')
+const tagsInput = document.querySelector('#tags')
+const searchInput = document.querySelector('#search')
 
 const error = document.querySelector('.error')
 
@@ -28,22 +30,25 @@ const closePanel = () => {
 	textarea.value = ''
 	category.selectedIndex = 0
 	mainTitle.value = ''
+	tagsInput.value = ''
 	editMode = null
 }
 
 const addNote = () => {
 	if (textarea.value !== '' && category.selectedIndex !== 0 && mainTitle.value !== '') {
+		const tags = tagsInput.value.split(',').map(tag => tag.trim())
 		if (editMode !== null) {
 			const noteToEdit = document.getElementById(editMode)
 			noteToEdit.querySelector('.note-main-title').innerText = mainTitle.value
 			noteToEdit.querySelector('.note-title').innerText = selectedValue
 			noteToEdit.querySelector('.note-body').innerText = textarea.value
+			noteToEdit.querySelector('.tags').innerText = tags.join(', ')
 			noteToEdit.querySelector('.date').innerText = new Date().toLocaleString()
 			checkColor(noteToEdit)
 			editMode = null
 			saveToLocalStorage()
 		} else {
-			createNote()
+			createNote(tags)
 		}
 		closePanel()
 	} else {
@@ -51,31 +56,33 @@ const addNote = () => {
 	}
 }
 
-const createNote = () => {
+const createNote = tags => {
 	const newNote = document.createElement('div')
 	newNote.classList.add('note')
 	newNote.setAttribute('id', cardId)
 	cardId++
-	newNote.innerHTML = ` <div class="note-header">
-        <div class="note-main-title">${mainTitle.value}</div>
-        <button class="delete-note" onclick="deleteNote(${newNote.id})">
-            <i class="fas fa-times icon"></i>
-        </button>
-        <button class="edit-note" onclick="loadNote(${newNote.id})">
-            <i class="fas fa-edit icon"></i>
-        </button>
-        <button class="pin-note" onclick="pinNote(${newNote.id})">
-            <i class="fas fa-thumbtack icon"></i>
-        </button>
-    </div>
-    <div class="note-body">
-        ${textarea.value}
-    </div>
-    <div class="note-header">
-        <div class="note-title">${selectedValue}</div>
-    </div>
-	<div class="date">${new Date().toLocaleString()}</div>
-	`
+	newNote.innerHTML = ` 
+        <div class="note-header">
+            <div class="note-main-title">${mainTitle.value}</div>
+            <button class="delete-note" onclick="deleteNote(${newNote.id})">
+                <i class="fas fa-times icon"></i>
+            </button>
+            <button class="edit-note" onclick="loadNote(${newNote.id})">
+                <i class="fas fa-edit icon"></i>
+            </button>
+            <button class="pin-note" onclick="pinNote(${newNote.id})">
+                <i class="fas fa-thumbtack icon"></i>
+            </button>
+        </div>
+        <div class="note-body">
+            ${textarea.value}
+        </div>
+        <div class="note-header">
+            <div class="note-title">${selectedValue}</div>
+        </div>
+        <div class="tags">${tags.join(', ')}</div>
+        <div class="date">${new Date().toLocaleString()}</div>
+    `
 	checkColor(newNote)
 
 	if (newNote.classList.contains('pinned')) {
@@ -101,6 +108,7 @@ const loadNote = id => {
 		}
 	}
 
+	tagsInput.value = noteToEdit.querySelector('.tags').innerText
 	editMode = id
 }
 
@@ -127,6 +135,7 @@ const saveToLocalStorage = () => {
 			mainTitle: note.querySelector('.note-main-title').innerText,
 			title: note.querySelector('.note-title').innerText,
 			content: note.querySelector('.note-body').innerText,
+			tags: note.querySelector('.tags').innerText,
 			color: note.style.backgroundColor,
 			pin: note.classList.contains('pinned'),
 			date: note.querySelector('.date').innerText,
@@ -186,8 +195,9 @@ const createNoteElement = noteObj => {
         <div class="note-header">
             <div class="note-title">${noteObj.title}</div>
         </div>
-		<div class="date">${noteObj.date}</div>
-		`
+        <div class="tags">${noteObj.tags}</div>
+        <div class="date">${noteObj.date}</div>
+    `
 
 	if (noteObj.pin) {
 		newNote.classList.add('pinned')
@@ -233,8 +243,26 @@ const deleteAllNotes = () => {
 	location.reload()
 }
 
+const searchNotes = query => {
+	const allNotes = document.querySelectorAll('.note')
+	allNotes.forEach(note => {
+		if (
+			note.innerText.toLowerCase().includes(query.toLowerCase()) ||
+			note.querySelector('.tags').innerText.toLowerCase().includes(query.toLowerCase())
+		) {
+			note.style.display = 'block'
+		} else {
+			note.style.display = 'none'
+		}
+	})
+}
+
 addBtn.addEventListener('click', openPanel)
 cancelBtn.addEventListener('click', closePanel)
 saveBtn.addEventListener('click', addNote)
 deleteAllBtn.addEventListener('click', deleteAllNotes)
 window.addEventListener('load', loadFromLocalStorage)
+searchInput.addEventListener('input', () => {
+	const searchQuery = searchInput.value.trim()
+	searchNotes(searchQuery)
+})

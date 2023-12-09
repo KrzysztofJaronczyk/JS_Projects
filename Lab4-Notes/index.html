@@ -19,7 +19,10 @@
             <button class="delete-all"><i class="fas fa-trash-alt icon"></i>Delete all</button>
         </div>
     </div>
-
+    <div class="search-container">
+        <label class="search" for="search">Search:</label>
+        <input type="text" id="search" placeholder="Search notes by any field...">
+    </div>
     <div class="pinned-area">
         <h1 style="position: absolute;">Pinned notes</h1>
     </div>
@@ -76,12 +79,17 @@
             <option value="4">Other</option>
         </select>
 
+        <label for="tags">Optional Tags:</label>
+        <input type="text" id="tags" placeholder="Enter tags separated by commas">
+
         <p class="error">Fill all fields</p>
 
         <div class="panel-buttons">
             <button class="save"><i class="fas fa-save icon"></i> Add note</button>
             <button class="cancel"><i class="fas fa-window-close icon"></i> Cancel</button>
         </div>
+
+
     </div>
 
     <script src="script.js"></script>

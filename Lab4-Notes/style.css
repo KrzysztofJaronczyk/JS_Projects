@@ -74,6 +74,14 @@ body {
 	background-color: rgba(0, 0, 0, 0.06);
 }
 
+.tags {
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-left: 20px;
+}
+
 .note-header .delete-note {
 	background: none;
 	font-size: 20px;
@@ -119,7 +127,7 @@ body {
 	margin-bottom: 10px;
 }
 
-.date{
+.date {
 	display: flex;
 	justify-content: end;
 	margin-bottom: 10px;
@@ -128,6 +136,7 @@ body {
 
 .note-panel #text,
 .note-panel #category,
+.note-panel #tags,
 .note-panel #title {
 	margin-bottom: 20px;
 	padding: 10px 20px;
@@ -143,4 +152,34 @@ body {
 	margin-bottom: 20px;
 	color: red;
 	visibility: hidden;
+}
+
+.search-container {
+	display: flex;
+	align-items: left;
+	flex-direction: column;
+	position: absolute;
+	top: 20%;
+	left: 90%;
+	transform: translate(-50%, -50%);
+	padding: 40px 0;
+	width: 600px;
+	box-shadow: 0 0 14 black;
+	border-radius: 5px;
+}
+
+#search {
+	margin-bottom: 20px;
+	padding: 10px 20px;
+	max-width: 70%;
+	max-height: 600px;
+	border: 1px solid black;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
+.search {
+	margin-bottom: 10px;
+
+	font-size: 24px;
 }
