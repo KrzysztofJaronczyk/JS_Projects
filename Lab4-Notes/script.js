@@ -1,4 +1,6 @@
 const addBtn = document.querySelector('.add')
+const refreshBtn = document.querySelector('.refresh')
+
 const saveBtn = document.querySelector('.save')
 const cancelBtn = document.querySelector('.cancel')
 const deleteAllBtn = document.querySelector('.delete-all')
@@ -61,7 +63,7 @@ const createNote = tags => {
 	newNote.classList.add('note')
 	newNote.setAttribute('id', cardId)
 	cardId++
-	newNote.innerHTML = ` 
+	newNote.innerHTML = `
         <div class="note-header">
             <div class="note-main-title">${mainTitle.value}</div>
             <button class="delete-note" onclick="deleteNote(${newNote.id})">
@@ -195,7 +197,7 @@ const createNoteElement = noteObj => {
         <div class="note-header">
             <div class="note-title">${noteObj.title}</div>
         </div>
-        <div class="tags">${noteObj.tags}</div>
+        <div class="tags" onclick="filterNotesByTag('${noteObj.tags}')">${noteObj.tags}</div>
         <div class="date">${noteObj.date}</div>
     `
 
@@ -204,6 +206,17 @@ const createNoteElement = noteObj => {
 	}
 
 	return newNote
+}
+
+const filterNotesByTag = tag => {
+	const allNotes = document.querySelectorAll('.note')
+	allNotes.forEach(note => {
+		if (note.querySelector('.tags').innerText.toLowerCase() === tag.toLowerCase()) {
+			note.style.display = 'block'
+		} else {
+			note.style.display = 'none'
+		}
+	})
 }
 
 const selectValue = () => {
@@ -256,6 +269,10 @@ const searchNotes = query => {
 		}
 	})
 }
+
+refreshBtn.addEventListener('click', () => {
+	location.reload()
+})
 
 addBtn.addEventListener('click', openPanel)
 cancelBtn.addEventListener('click', closePanel)
