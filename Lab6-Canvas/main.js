@@ -10,6 +10,8 @@ const startBtn = document.getElementById('startBtn')
 const resetBtn = document.getElementById('resetBtn')
 const numBallsInput = document.getElementById('numBalls')
 const distInput = document.getElementById('dist')
+const attractInput = document.getElementById('attract')
+const clickToleranceInput = document.getElementById('tolerance')
 
 let balls = []
 let isGameRunning = false
@@ -93,8 +95,46 @@ function gameLoop(timestamp) {
 	updateGame()
 	drawGame()
 	drawFPS(fps)
+    countBalls()
 	requestAnimationFrame(gameLoop)
 }
+
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    attractOrRepelBalls(mouseX, mouseY);
+});
+
+function attractOrRepelBalls(mouseX, mouseY) {
+    const force = parseFloat(attractInput.value);
+    balls.forEach(ball => {
+        const dx = ball.x - mouseX;
+        const dy = ball.y - mouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 50) {
+            ball.speedX = dx / distance * force;
+            ball.speedY = dy / distance * force;
+        }
+    });
+}
+
+canvas.addEventListener('click', event => {
+	const rect = canvas.getBoundingClientRect()
+	const clickX = event.clientX - rect.left
+	const clickY = event.clientY - rect.top
+	for (let i = 0; i < balls.length; i++) {
+		const ball = balls[i]
+		const distance = Math.sqrt((clickX - ball.x) ** 2 + (clickY - ball.y) ** 2)
+		const tolerance = parseFloat(clickToleranceInput.value) // extra margin
+		if (distance < ball.radius + tolerance) {
+			balls.splice(i, 1)
+			createBalls(2) // add 2 balls
+			break
+		}
+	}
+})
+
 function startGame() {
 	isGameRunning = true
 	createBalls(parseInt(numBallsInput.value))
@@ -115,6 +155,11 @@ function resizeCanvas() {
 function drawFPS(fps) {
 	context.font = '20px Arial'
 	context.fillText(`FPS: ${fps}`, 30, 30)
+}
+
+function countBalls() {
+    context.font = '20px Arial'
+    context.fillText(`Balls: ${balls.length}`, canvas.width-110, 30)
 }
 
 //listeners
