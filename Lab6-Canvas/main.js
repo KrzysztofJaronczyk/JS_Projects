@@ -11,10 +11,8 @@ const resetBtn = document.getElementById('resetBtn')
 const numBallsInput = document.getElementById('numBalls')
 const distInput = document.getElementById('dist')
 
-
 let balls = []
 let isGameRunning = false
-
 
 class Ball {
 	constructor(x, y, radius, speedX, speedY) {
@@ -46,16 +44,26 @@ class Ball {
 	}
 }
 
-
-
 function createBalls(count) {
 	for (let i = 0; i < count; i++) {
 		let radius = 10
+		//never outside the canvas
 		let x = Math.random() * (canvas.width - radius * 2) + radius
 		let y = Math.random() * (canvas.height - radius * 2) + radius
+		//-2 / 2
 		let speedX = (Math.random() - 0.5) * 4
 		let speedY = (Math.random() - 0.5) * 4
 		balls.push(new Ball(x, y, radius, speedX, speedY))
+	}
+}
+
+function drawLineBetweenBalls(ball1, ball2) {
+	const distance = Math.sqrt((ball1.x - ball2.x) ** 2 + (ball1.y - ball2.y) ** 2)
+	if (distance < parseInt(distInput.value)) {
+		context.beginPath()
+		context.moveTo(ball1.x, ball1.y)
+		context.lineTo(ball2.x, ball2.y)
+		context.stroke()
 	}
 }
 
@@ -67,19 +75,26 @@ function updateGame() {
 
 function drawGame() {
 	context.clearRect(0, 0, canvas.width, canvas.height)
-	for (const ball of balls) {
-		ball.draw(context)
+	for (let i = 0; i < balls.length; i++) {
+		balls[i].draw(context)
+		for (let j = i + 1; j < balls.length; j++) {
+			drawLineBetweenBalls(balls[i], balls[j])
+		}
 	}
 }
+let lastTime = 0
 
-//optional. why not?
-function gameLoop() {
+function gameLoop(timestamp) {
 	if (!isGameRunning) return
+	const deltaTime = timestamp - lastTime
+	lastTime = timestamp
+	const fps = Math.round(1000 / deltaTime)
+
 	updateGame()
 	drawGame()
+	drawFPS(fps)
 	requestAnimationFrame(gameLoop)
 }
-
 function startGame() {
 	isGameRunning = true
 	createBalls(parseInt(numBallsInput.value))
@@ -95,6 +110,11 @@ function resetGame() {
 function resizeCanvas() {
 	canvas.width = container.offsetWidth
 	canvas.height = container.offsetHeight
+}
+
+function drawFPS(fps) {
+	context.font = '20px Arial'
+	context.fillText(`FPS: ${fps}`, 30, 30)
 }
 
 //listeners
