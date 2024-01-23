@@ -1,0 +1,51 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	background-color: #333;
+	font-size: 36px;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: aliceblue;
+	font-size: 24px;
+}
+
+input {
+	padding: 10px;
+	margin: 10px 30px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+button {
+	padding: 10px;
+	margin: 10px 0;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	background-color: #333;
+	color: aliceblue;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+button:hover {
+	background-color: #ccc;
+	color: #333;
+}
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+    border: 4px solid black;
+	/* background-color: red; */
+	margin-top: 20px;
+	width: 90%;
+	height: 70vh;
+}
