@@ -1,3 +1,21 @@
+const container = document.querySelector('.container')
+const canvas = document.createElement('canvas')
+canvas.width = container.offsetWidth
+canvas.height = container.offsetHeight
+container.appendChild(canvas)
+
+const context = canvas.getContext('2d')
+
+const startBtn = document.getElementById('startBtn')
+const resetBtn = document.getElementById('resetBtn')
+const numBallsInput = document.getElementById('numBalls')
+const distInput = document.getElementById('dist')
+
+
+let balls = []
+let isGameRunning = false
+
+
 class Ball {
 	constructor(x, y, radius, speedX, speedY) {
 		this.x = x
@@ -18,8 +36,8 @@ class Ball {
 		this.x += this.speedX
 		this.y += this.speedY
 
-        //edges
-        if (this.x - this.radius < 0 || this.x + this.radius > width) {
+		//edges
+		if (this.x - this.radius < 0 || this.x + this.radius > width) {
 			this.speedX = -this.speedX
 		}
 		if (this.y - this.radius < 0 || this.y + this.radius > height) {
@@ -28,21 +46,7 @@ class Ball {
 	}
 }
 
-let balls = []
-let isGameRunning = false
 
-const container = document.querySelector('.container')
-const canvas = document.createElement('canvas')
-canvas.width = container.offsetWidth
-canvas.height = container.offsetHeight
-container.appendChild(canvas)
-
-const context = canvas.getContext('2d')
-
-const startBtn = document.getElementById('startBtn')
-const resetBtn = document.getElementById('resetBtn')
-const numBallsInput = document.getElementById('numBalls')
-const distInput = document.getElementById('dist')
 
 function createBalls(count) {
 	for (let i = 0; i < count; i++) {
@@ -88,7 +92,12 @@ function resetGame() {
 	context.clearRect(0, 0, canvas.width, canvas.height)
 }
 
+function resizeCanvas() {
+	canvas.width = container.offsetWidth
+	canvas.height = container.offsetHeight
+}
 
-
+//listeners
 startBtn.addEventListener('click', () => startGame())
 resetBtn.addEventListener('click', () => resetGame())
+window.addEventListener('resize', resizeCanvas)
