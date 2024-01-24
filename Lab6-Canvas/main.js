@@ -48,13 +48,13 @@ class Ball {
 
 function createBalls(count) {
 	for (let i = 0; i < count; i++) {
-		let radius = 10
+		let radius = Math.random() * 20 + 2
 		//never outside the canvas
 		let x = Math.random() * (canvas.width - radius * 2) + radius
 		let y = Math.random() * (canvas.height - radius * 2) + radius
-		//-2 / 2
-		let speedX = (Math.random() - 0.5) * 4
-		let speedY = (Math.random() - 0.5) * 4
+        let speedFactor = 20;
+        let speedX = (Math.random() - 0.5) * (speedFactor / radius);
+        let speedY = (Math.random() - 0.5) * (speedFactor / radius);
 		balls.push(new Ball(x, y, radius, speedX, speedY))
 	}
 }
