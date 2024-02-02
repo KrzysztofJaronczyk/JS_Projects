@@ -1,11 +1,14 @@
 const input = document.querySelector('input')
-const button = document.querySelector('button')
 const cityName = document.querySelector('.city-name')
 const warning = document.querySelector('.warning')
 const photo = document.querySelector('.photo')
 const weather = document.querySelector('.weather')
 const temperature = document.querySelector('.temperature')
 const humidity = document.querySelector('.humidity')
+
+const addBtn = document.querySelector('.add')
+const refreshBtn = document.querySelector('.refresh')
+const deleteAllBtn = document.querySelector('.delete-all')
 
 const API_LINK = 'https://api.openweathermap.org/data/2.5/weather?q='
 const API_KEY = '&appid=14296e27415e5e7f9c5595a6105bb271'
@@ -58,7 +61,6 @@ function checkWeatherIcon(weather) {
 	}
 }
 
-button.addEventListener('click', getWeather)
 input.addEventListener('keyup', e => {
 	if (e.key === 'Enter') getWeather()
 })
