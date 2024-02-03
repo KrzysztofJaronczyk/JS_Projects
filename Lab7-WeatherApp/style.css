@@ -10,11 +10,12 @@ body {
 	color: rgb(255, 255, 255);
 	background-image: linear-gradient(315deg, #c2118d 0%, #ff503c 74%);
 	font-size: 20px;
+	overflow-y: hidden;
 }
 
 .wrapper {
 	display: flex;
-    height: 90vh;
+	height: 90vh;
 	align-items: start;
 	flex-wrap: wrap;
 	padding: 20px;
@@ -61,7 +62,7 @@ h1 {
 }
 
 input {
-    position: relative;
+	position: relative;
 	font-size: 16px;
 	padding: 5px 10px;
 	margin-top: 10px;
@@ -69,7 +70,7 @@ input {
 	border: none;
 	color: #fff;
 	border-bottom: 2px solid #ddd;
-    z-index: 100;
+	z-index: 100;
 }
 
 input::placeholder {
@@ -95,10 +96,11 @@ button:hover {
 }
 
 .container {
-    position: relative;
+	position: relative;
 	width: 18vw;
 	height: 40vh;
 	padding: 20px 20px;
+	margin: 0 10px;
 	background-color: rgba(0, 0, 0, 0.8);
 	border: 2px solid white;
 	border-radius: 25px;
@@ -119,9 +121,9 @@ button:hover {
 }
 
 .city-name {
-    position: relative;
+	position: relative;
 	font-size: 24px;
-    z-index: 100;
+	z-index: 100;
 }
 
 .headings,
@@ -134,7 +136,7 @@ button:hover {
 .weather-info p {
 	width: 33.3%;
 	text-align: center;
-    font-size: 14px;
+	font-size: 14px;
 }
 
 .headings {
@@ -151,9 +153,9 @@ button:hover {
 }
 
 .photo {
-    position: absolute;
+	position: absolute;
 	top: -20px;
-    z-index: 0;
+	z-index: 0;
 	right: 0;
 	width: 140px;
 	height: 140px;

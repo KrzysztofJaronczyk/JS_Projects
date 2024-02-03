@@ -5,6 +5,7 @@ const photo = document.querySelector('.photo')
 const weather = document.querySelector('.weather')
 const temperature = document.querySelector('.temperature')
 const humidity = document.querySelector('.humidity')
+const wrapper = document.querySelector('.wrapper')
 
 const addBtn = document.querySelector('.add')
 const refreshBtn = document.querySelector('.refresh')
@@ -14,31 +15,39 @@ const API_LINK = 'https://api.openweathermap.org/data/2.5/weather?q='
 const API_KEY = '&appid=14296e27415e5e7f9c5595a6105bb271'
 const API_UNITS = '&units=metric'
 
-const getWeather = () => {
-	const city = input.value
-	const URL = API_LINK + city + API_KEY + API_UNITS
+const getWeather = (e) => {
+	const inputElement = e.target;
+	const city = inputElement.value;
+	const URL = API_LINK + city + API_KEY + API_UNITS;
 
-	axios
-		.get(URL)
+	axios.get(URL)
 		.then(res => {
-			// console.log(res.data)
-			const temp = res.data.main.temp
-			const hum = res.data.main.humidity
-			// console.log(res.data.weather[0])
-			const status = Object.assign({}, ...res.data.weather)
-			// console.log(status.main)
-			checkWeatherIcon(status.main)
-			warning.textContent = ''
-			input.value = ''
-			cityName.textContent = res.data.name
+			const container = inputElement.closest('.container');
+			const cityName = container.querySelector('.city-name');
+			const weather = container.querySelector('.weather');
+			const temperature = container.querySelector('.temperature');
+			const humidity = container.querySelector('.humidity');
+			const photo = container.querySelector('.photo');
+			const warning = container.querySelector('.warning');
 
-			temperature.textContent = Math.floor(temp) + '°C'
-			humidity.textContent = hum + '%'
-			weather.textContent = status.main
-			photo.src = checkWeatherIcon(status.main)
+			const temp = res.data.main.temp;
+			const hum = res.data.main.humidity;
+			const status = Object.assign({}, ...res.data.weather);
+
+			cityName.textContent = res.data.name;
+			temperature.textContent = Math.floor(temp) + '°C';
+			humidity.textContent = hum + '%';
+			weather.textContent = status.main;
+			photo.src = checkWeatherIcon(status.main);
+			warning.textContent = '';
+			e.target.value = '';
 		})
-		.catch(() => (warning.textContent = 'Enter the correct city name'))
-}
+		.catch(() => {
+			const warning = inputElement.nextElementSibling; // Uprzednio zdefiniuj, gdzie dokładnie znajduje się element warning
+			warning.textContent = 'Enter the correct city name';
+		});
+};
+
 
 function checkWeatherIcon(weather) {
 	switch (weather) {
@@ -61,6 +70,51 @@ function checkWeatherIcon(weather) {
 	}
 }
 
-input.addEventListener('keyup', e => {
-	if (e.key === 'Enter') getWeather()
+function addNewCity() {
+	let totalCities = document.querySelectorAll('.container').length
+	if (totalCities < 10) {
+		wrapper.innerHTML += `
+	<div class="container id=${totalCities}">
+	<div class="top">
+		<div class="main-info">
+			<div>
+				<h3 class="city-name"></h3>
+				<input type="text" id=${totalCities} placeholder="Enter city name...">
+				<p class="warning"></p>
+			</div>
+			<img src="./img/unknown.png" alt="Picture of actual weather" class="photo">
+		</div>
+	</div>
+	<div class="bottom">
+		<div class="headings">
+			<p>Weather:</p>
+			<p>Temp.:</p>
+			<p>Humidity:</p>
+		</div>
+		<div class="weather-info">
+			<p class="weather"></p>
+			<p class="temperature"></p>
+			<p class="humidity"></p>
+		</div>
+	</div>
+</div>
+	`
+	} else {
+		alert('You have reached the maximum number of cities')
+	}
+}
+
+refreshBtn.addEventListener('click', () => {
+	location.reload()
 })
+
+deleteAllBtn.addEventListener('click', () => {
+	wrapper.innerHTML = ''
+})
+
+addBtn.addEventListener('click', addNewCity)
+wrapper.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+        getWeather(e);
+    }
+});
