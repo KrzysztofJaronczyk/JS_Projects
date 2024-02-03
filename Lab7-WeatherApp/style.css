@@ -167,3 +167,8 @@ button:hover {
 	font-size: 14px;
 	color: tomato;
 }
+
+.fa-circle-xmark {
+	color: tomato;
+	cursor: pointer;
+}
