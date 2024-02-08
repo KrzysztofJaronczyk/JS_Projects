@@ -16,6 +16,8 @@ const API_LINK = 'https://api.openweathermap.org/data/2.5/weather?q='
 const API_KEY = '&appid=14296e27415e5e7f9c5595a6105bb271'
 const API_UNITS = '&units=metric'
 
+let savedCities = JSON.parse(localStorage.getItem('savedCities')) || []
+
 const getWeather = e => {
 	const inputElement = e.target
 	const city = inputElement.value
@@ -43,9 +45,22 @@ const getWeather = e => {
 			photo.src = checkWeatherIcon(status.main)
 			warning.textContent = ''
 			e.target.value = ''
+
+			// Create a weather data object
+			const weatherData = {
+				city: res.data.name,
+				temp: Math.floor(res.data.main.temp),
+				humidity: res.data.main.humidity,
+				weather: status.main,
+				icon: checkWeatherIcon(status.main),
+			}
+
+			// Add to savedCities and save to localStorage
+			savedCities.push(weatherData)
+			localStorage.setItem('savedCities', JSON.stringify(savedCities))
 		})
 		.catch(() => {
-			const warning = inputElement.nextElementSibling // Uprzednio zdefiniuj, gdzie dokładnie znajduje się element warning
+			const warning = inputElement.nextElementSibling
 			warning.textContent = 'Enter the correct city name'
 		})
 }
@@ -71,41 +86,6 @@ function checkWeatherIcon(weather) {
 	}
 }
 
-function addNewCity() {
-	let totalCities = document.querySelectorAll('.container').length
-	if (totalCities < 10) {
-		wrapper.innerHTML += `
-	<div class="container id=${totalCities}">
-	<div class="top">
-	<i class="fa-regular fa-circle-xmark"></i>
-		<div class="main-info">
-			<div>
-				<h3 class="city-name"></h3>
-				<input type="text" placeholder="Enter city name...">
-				<p class="warning"></p>
-			</div>
-			<img src="./img/unknown.png" alt="Picture of actual weather" class="photo">
-		</div>
-	</div>
-	<div class="bottom">
-		<div class="headings">
-			<p>Weather:</p>
-			<p>Temp.:</p>
-			<p>Humidity:</p>
-		</div>
-		<div class="weather-info">
-			<p class="weather"></p>
-			<p class="temperature"></p>
-			<p class="humidity"></p>
-		</div>
-	</div>
-</div>
-	`
-	} else {
-		alert('You have reached the maximum number of cities')
-	}
-}
-
 refreshBtn.addEventListener('click', () => {
 	location.reload()
 })
@@ -113,12 +93,20 @@ refreshBtn.addEventListener('click', () => {
 wrapper.addEventListener('click', e => {
 	if (e.target.classList.contains('fa-circle-xmark')) {
 		const container = e.target.closest('.container')
+		const cityName = container.querySelector('.city-name').textContent
+
+		// Remove city from savedCities and update localStorage
+		savedCities = savedCities.filter(city => city.city !== cityName)
+		localStorage.setItem('savedCities', JSON.stringify(savedCities))
+
 		container.remove()
 	}
 })
 
 deleteAllBtn.addEventListener('click', () => {
 	wrapper.innerHTML = ''
+	savedCities = []
+	localStorage.setItem('savedCities', JSON.stringify(savedCities))
 })
 
 addBtn.addEventListener('click', addNewCity)
@@ -129,3 +117,8 @@ wrapper.addEventListener('keyup', e => {
 	}
 })
 
+function loadSavedCities() {
+	savedCities.forEach(city => displayCity(city))
+}
+
+document.addEventListener('DOMContentLoaded', loadSavedCities)
