@@ -53,6 +53,7 @@ const getWeather = e => {
 				humidity: res.data.main.humidity,
 				weather: status.main,
 				icon: checkWeatherIcon(status.main),
+				lastUpdated: Date.now(), // Timestamp of the update
 			}
 
 			// Add to savedCities and save to localStorage
@@ -86,6 +87,39 @@ function checkWeatherIcon(weather) {
 	}
 }
 
+function updateWeatherForSavedCities() {
+	savedCities.forEach((city, index) => {
+		const URL = `${API_LINK}${city.city}${API_KEY}${API_UNITS}`
+		axios
+			.get(URL)
+			.then(res => {
+				const { temp, humidity } = res.data.main
+				const status = Object.assign({}, ...res.data.weather)
+
+				// Update city data in the array
+				savedCities[index] = {
+					...city,
+					temp: Math.floor(temp),
+					humidity,
+					weather: status.main,
+					icon: checkWeatherIcon(status.main),
+					lastUpdated: Date.now(),
+				}
+
+				// Immediately update localStorage after each city's data is updated
+				localStorage.setItem('savedCities', JSON.stringify(savedCities))
+
+				// Update UI for each city
+				displayCity(savedCities[index])
+			})
+			.catch(error => {
+				console.error(`Error updating weather for ${city.city}:`, error)
+			})
+	})
+}
+
+setInterval(updateWeatherForSavedCities, 300000) // 5 min
+
 refreshBtn.addEventListener('click', () => {
 	location.reload()
 })
@@ -118,6 +152,8 @@ wrapper.addEventListener('keyup', e => {
 })
 
 function loadSavedCities() {
+	const storedCities = JSON.parse(localStorage.getItem('savedCities')) || []
+	savedCities = storedCities
 	savedCities.forEach(city => displayCity(city))
 }
 

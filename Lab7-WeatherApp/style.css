@@ -107,11 +107,19 @@ button:hover {
 }
 
 .top {
-	height: 60%;
+	height: 50%;
 }
 
 .bottom {
-	height: 50%;
+	height: 60%;
+}
+
+.date-time-update {
+	position: relative;
+	text-align: center;
+	align-items: center;
+	font-size: 18px;
+	font-weight: bold;
 }
 
 .main-info {
@@ -143,8 +151,8 @@ button:hover {
 	width: 33.3%;
 	text-align: center;
 	font-size: 24px;
+	align-items: center;
 }
-
 
 .headings {
 	height: 35%;

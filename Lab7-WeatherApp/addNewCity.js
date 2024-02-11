@@ -73,25 +73,25 @@ function addNewCity() {
 }
 
 function displayCity(cityData) {
-	const container = document.createElement('div')
-	container.classList.add('container')
-	if (cityData.id) {
-		container.setAttribute('data-id', cityData.id)
-	} else {
-		container.setAttribute('data-id', Date.now())
+	// Attempt to find an existing container for the city
+	let container = document.querySelector(`[data-city-name="${cityData.city}"]`)
+	if (!container) {
+		container = document.createElement('div')
+		container.classList.add('container')
+		container.setAttribute('data-city-name', cityData.city)
+		wrapper.appendChild(container)
 	}
-
 	container.innerHTML = `
         <div class="top">
             <i class="fa-regular fa-circle-xmark"></i>
             <div class="main-info">
                 <div>
                     <h3 class="city-name">${cityData.city || ''}</h3>
-                    <input type="text" placeholder="Enter city name...">
                     <p class="warning"></p>
                 </div>
                 <img src="${cityData.icon || './img/unknown.png'}" alt="Weather icon" class="photo">
             </div>
+			<p class="date-time-update">Updated: ${new Date(cityData.lastUpdated).toLocaleString() || 'Never'}</p>
         </div>
         <div class="bottom">
             <div class="headings">
@@ -107,7 +107,15 @@ function displayCity(cityData) {
         </div>
     `
 
-	wrapper.appendChild(container)
+	if (!container.hasEventListener) {
+		const deleteBtn = container.querySelector('.fa-circle-xmark')
+		deleteBtn.addEventListener('click', function () {
+			container.remove()
+			savedCities = savedCities.filter(city => city.city !== cityData.city)
+			localStorage.setItem('savedCities', JSON.stringify(savedCities))
+		})
+		container.hasEventListener = true
+	}
 }
 
 function loadSavedCities() {
