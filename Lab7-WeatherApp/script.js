@@ -153,8 +153,49 @@ wrapper.addEventListener('keyup', e => {
 
 function loadSavedCities() {
 	const storedCities = JSON.parse(localStorage.getItem('savedCities')) || []
-	savedCities = storedCities
-	savedCities.forEach(city => displayCity(city))
+	const currentTime = Date.now()
+
+	storedCities.forEach(city => {
+		const timeSinceLastUpdate = currentTime - city.lastUpdated
+		if (timeSinceLastUpdate <= 300000) {
+			displayCity(city)
+		} else {
+			updateWeatherForCity(city.city)
+		}
+	})
+}
+
+function updateWeatherForCity(cityName) {
+	const URL = `${API_LINK}${cityName}${API_KEY}${API_UNITS}`
+	axios
+		.get(URL)
+		.then(res => {
+			const { temp, humidity } = res.data.main
+			const status = Object.assign({}, ...res.data.weather)
+
+			const updatedCityData = {
+				city: cityName,
+				temp: Math.floor(temp),
+				humidity,
+				weather: status.main,
+				icon: checkWeatherIcon(status.main),
+				lastUpdated: Date.now(),
+			}
+
+			const cityIndex = savedCities.findIndex(city => city.city === cityName)
+			if (cityIndex > -1) {
+				savedCities[cityIndex] = updatedCityData
+			} else {
+				savedCities.push(updatedCityData)
+			}
+
+			displayCity(updatedCityData)
+
+			localStorage.setItem('savedCities', JSON.stringify(savedCities))
+		})
+		.catch(error => {
+			console.error(`Error updating weather for ${cityName}:`, error)
+		})
 }
 
 document.addEventListener('DOMContentLoaded', loadSavedCities)
