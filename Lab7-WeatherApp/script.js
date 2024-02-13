@@ -46,11 +46,11 @@ const getWeather = e => {
 			warning.textContent = ''
 			e.target.value = ''
 
-			// Create a weather data object
+			// Create a weather data object including lat and lon
 			const weatherData = {
 				city: res.data.name,
-				temp: Math.floor(res.data.main.temp),
-				humidity: res.data.main.humidity,
+				temp: Math.floor(temp),
+				humidity: hum,
 				weather: status.main,
 				icon: checkWeatherIcon(status.main),
 				lastUpdated: Date.now(), // Timestamp of the update
@@ -63,6 +63,23 @@ const getWeather = e => {
 		.catch(() => {
 			const warning = inputElement.nextElementSibling
 			warning.textContent = 'Enter the correct city name'
+		})
+}
+
+function fetchHourlyForecast(cityName) {
+	console.log(cityName)
+	const oneCallAPI = `https:/api.openweathermap.org/data/2.5/forecast?q=${cityName}&${API_KEY}`
+	console.log(oneCallAPI)
+
+	axios
+		.get(oneCallAPI)
+		.then(response => {
+			console.log(`Hourly forecast for ${cityName}:`, response.data)
+			const weatherData = prepareDataForChart(response.data)
+			renderWeatherChart(weatherData)
+		})
+		.catch(error => {
+			console.error('Error fetching hourly forecast:', error)
 		})
 }
 
@@ -196,6 +213,50 @@ function updateWeatherForCity(cityName) {
 		.catch(error => {
 			console.error(`Error updating weather for ${cityName}:`, error)
 		})
+}
+
+function prepareDataForChart(jsonData) {
+	const requiredEntries = jsonData.list.slice(0, 4) // 12 hours
+	const labels = requiredEntries.map(entry =>
+		new Date(entry.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+	)
+	// Convert temperature from Kelvin to Celsius
+	const temperatures = requiredEntries.map(entry => (entry.main.temp - 273.15).toFixed(2))
+
+	return { labels, temperatures }
+}
+
+function renderWeatherChart({ labels, temperatures }) {
+	const ctx = document.getElementById('weatherChart').getContext('2d')
+	new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Temperature (°C)',
+					data: temperatures,
+					backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					borderColor: 'rgba(255, 99, 132, 1)',
+					borderWidth: 1,
+				},
+			],
+		},
+		options: {
+			scales: {
+				y: {
+					beginAtZero: false,
+					suggestedMin: -10,
+					suggestedMax: 40,
+					ticks: {
+						callback: function (value, index, values) {
+							return `${value}°C`
+						},
+					},
+				},
+			},
+		},
+	})
 }
 
 document.addEventListener('DOMContentLoaded', loadSavedCities)

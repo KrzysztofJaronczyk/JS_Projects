@@ -116,6 +116,9 @@ function displayCity(cityData) {
 		})
 		container.hasEventListener = true
 	}
+	container.onclick = () => {
+		fetchHourlyForecast(cityData.city)
+	}
 }
 
 function loadSavedCities() {
