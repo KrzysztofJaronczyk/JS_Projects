@@ -183,7 +183,27 @@ button:hover {
 	color: tomato;
 }
 
-.fa-circle-xmark {
+.fa-circle-xmark,
+.fa-chart-simple {
 	color: tomato;
 	cursor: pointer;
+}
+
+#weatherChart {
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	max-width: 600px;
+	max-height: 600px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.8);
+	border: 2px solid white;
+	border-radius: 25px;
+	cursor: pointer;
+	z-index: 1000;
 }

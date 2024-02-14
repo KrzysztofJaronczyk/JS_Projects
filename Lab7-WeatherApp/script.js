@@ -17,6 +17,7 @@ const API_KEY = '&appid=14296e27415e5e7f9c5595a6105bb271'
 const API_UNITS = '&units=metric'
 
 let savedCities = JSON.parse(localStorage.getItem('savedCities')) || []
+let myChart = null
 
 const getWeather = e => {
 	const inputElement = e.target
@@ -146,11 +147,14 @@ wrapper.addEventListener('click', e => {
 		const container = e.target.closest('.container')
 		const cityName = container.querySelector('.city-name').textContent
 
-		// Remove city from savedCities and update localStorage
 		savedCities = savedCities.filter(city => city.city !== cityName)
 		localStorage.setItem('savedCities', JSON.stringify(savedCities))
-
 		container.remove()
+
+		if (myChart) {
+			myChart.destroy()
+			myChart = null
+		}
 	}
 })
 
@@ -214,21 +218,28 @@ function updateWeatherForCity(cityName) {
 			console.error(`Error updating weather for ${cityName}:`, error)
 		})
 }
-
 function prepareDataForChart(jsonData) {
 	const requiredEntries = jsonData.list.slice(0, 4) // 12 hours
 	const labels = requiredEntries.map(entry =>
 		new Date(entry.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 	)
-	// Convert temperature from Kelvin to Celsius
-	const temperatures = requiredEntries.map(entry => (entry.main.temp - 273.15).toFixed(2))
+	const temperatures = requiredEntries.map(entry => (entry.main.temp - 273.15).toFixed(2)) // Kelvin to Celsius
+	const humidity = requiredEntries.map(entry => entry.main.humidity)
 
-	return { labels, temperatures }
+	return { labels, temperatures, humidity }
 }
 
-function renderWeatherChart({ labels, temperatures }) {
-	const ctx = document.getElementById('weatherChart').getContext('2d')
-	new Chart(ctx, {
+function renderWeatherChart({ labels, temperatures, humidity }) {
+	const canvas = document.getElementById('weatherChart')
+	const ctx = canvas.getContext('2d')
+
+	if (myChart) {
+		myChart.destroy()
+	}
+	const newCanvas = canvas.cloneNode(true)
+	canvas.parentNode.replaceChild(newCanvas, canvas)
+
+	myChart = new Chart(newCanvas.getContext('2d'), {
 		type: 'line',
 		data: {
 			labels: labels,
@@ -236,26 +247,68 @@ function renderWeatherChart({ labels, temperatures }) {
 				{
 					label: 'Temperature (°C)',
 					data: temperatures,
-					backgroundColor: 'rgba(255, 99, 132, 0.2)',
 					borderColor: 'rgba(255, 99, 132, 1)',
 					borderWidth: 1,
+					yAxisID: 'y',
+				},
+				{
+					label: 'Humidity (%)',
+					data: humidity,
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1,
+					yAxisID: 'y1',
 				},
 			],
 		},
 		options: {
 			scales: {
 				y: {
-					beginAtZero: false,
-					suggestedMin: -10,
-					suggestedMax: 40,
+					type: 'linear',
+					display: true,
+					position: 'left',
 					ticks: {
-						callback: function (value, index, values) {
-							return `${value}°C`
-						},
+						color: 'white',
+					},
+					grid: {
+						color: 'rgba(255, 255, 255, 0.1)',
+					},
+				},
+				y1: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					ticks: {
+						color: 'white',
+					},
+					grid: {
+						drawOnChartArea: false,
+					},
+				},
+				x: {
+					ticks: {
+						color: 'white',
+					},
+					grid: {
+						color: 'rgba(255, 255, 255, 0.1)',
+					},
+				},
+			},
+			plugins: {
+				legend: {
+					labels: {
+						color: 'white',
 					},
 				},
 			},
 		},
+	})
+
+	newCanvas.style.display = 'block'
+
+	newCanvas.addEventListener('click', () => {
+		newCanvas.style.display = 'none'
+		myChart.destroy()
+		myChart = null
 	})
 }
 

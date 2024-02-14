@@ -58,6 +58,7 @@ function addNewCity() {
             <p class="weather"></p>
             <p class="temperature"></p>
             <p class="humidity"></p>
+			<i class="fa-solid fa-chart-simple"></i>
         `
 
 		bottomSection.appendChild(headings)
@@ -67,6 +68,12 @@ function addNewCity() {
 		container.appendChild(bottomSection)
 
 		wrapper.appendChild(container)
+
+		const chartBtn = container.querySelector('.fa-chart-simple')
+
+		chartBtn.onclick = () => {
+			fetchHourlyForecast(cityName.textContent)
+		}
 	} else {
 		alert('You have reached the maximum number of cities')
 	}
@@ -103,6 +110,7 @@ function displayCity(cityData) {
                 <p class="weather">${cityData.weather || ''}</p>
                 <p class="temperature">${cityData.temp ? cityData.temp + '°C' : ''}</p>
                 <p class="humidity">${cityData.humidity ? cityData.humidity + '%' : ''}</p>
+				<i class="fa-solid fa-chart-simple"></i>
             </div>
         </div>
     `
@@ -116,7 +124,9 @@ function displayCity(cityData) {
 		})
 		container.hasEventListener = true
 	}
-	container.onclick = () => {
+	const chartBtn = container.querySelector('.fa-chart-simple')
+
+	chartBtn.onclick = () => {
 		fetchHourlyForecast(cityData.city)
 	}
 }
