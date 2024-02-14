@@ -21,6 +21,7 @@ function addNewCity() {
 
 		const input = document.createElement('input')
 		input.type = 'text'
+		input.setAttribute('class', 'google-places-autocomplete')
 		input.placeholder = 'Enter city name...'
 
 		const warning = document.createElement('p')
@@ -46,20 +47,11 @@ function addNewCity() {
 
 		const headings = document.createElement('div')
 		headings.classList.add('headings')
-		headings.innerHTML = `
-            <p>Weather:</p>
-            <p>Temp.:</p>
-            <p>Humidity:</p>
-        `
+		headings.innerHTML = `<p>Weather:</p><p>Temp.:</p><p>Humidity:</p>`
 
 		const weatherInfo = document.createElement('div')
 		weatherInfo.classList.add('weather-info')
-		weatherInfo.innerHTML = `
-            <p class="weather"></p>
-            <p class="temperature"></p>
-            <p class="humidity"></p>
-			<i class="fa-solid fa-chart-simple"></i>
-        `
+		weatherInfo.innerHTML = `<p class="weather"></p><p class="temperature"></p><p class="humidity"></p><i class="fa-solid fa-chart-simple"></i>`
 
 		bottomSection.appendChild(headings)
 		bottomSection.appendChild(weatherInfo)
@@ -69,18 +61,21 @@ function addNewCity() {
 
 		wrapper.appendChild(container)
 
-		const chartBtn = container.querySelector('.fa-chart-simple')
-
-		chartBtn.onclick = () => {
-			fetchHourlyForecast(cityName.textContent)
-		}
+		initAutocomplete(input)
 	} else {
 		alert('You have reached the maximum number of cities')
 	}
 }
 
+function initAutocomplete(inputElement) {
+	const autocomplete = new google.maps.places.Autocomplete(inputElement, { types: ['(cities)'] })
+	google.maps.event.addListener(autocomplete, 'place_changed', function () {
+		let place = autocomplete.getPlace()
+		// console.log(place.name)
+	})
+}
+
 function displayCity(cityData) {
-	// Attempt to find an existing container for the city
 	let container = document.querySelector(`[data-city-name="${cityData.city}"]`)
 	if (!container) {
 		container = document.createElement('div')
@@ -94,6 +89,7 @@ function displayCity(cityData) {
             <div class="main-info">
                 <div>
                     <h3 class="city-name">${cityData.city || ''}</h3>
+					<input type="text" placeholder="Enter city name...">	
                     <p class="warning"></p>
                 </div>
                 <img src="${cityData.icon || './img/unknown.png'}" alt="Weather icon" class="photo">

@@ -47,7 +47,6 @@ const getWeather = e => {
 			warning.textContent = ''
 			e.target.value = ''
 
-			// Create a weather data object including lat and lon
 			const weatherData = {
 				city: res.data.name,
 				temp: Math.floor(temp),
