@@ -61,7 +61,15 @@ function addNewCity() {
 
 		wrapper.appendChild(container)
 
+		// Initialize Google Places Autocomplete for the new input
 		initAutocomplete(input)
+
+		// Add event listener to the chart icon for fetching and displaying hourly forecast
+		const chartIcon = container.querySelector('.fa-chart-simple')
+		chartIcon.addEventListener('click', () => {
+			const cityNameText = cityName.textContent || input.value // Use the city name if available, or fall back to input value
+			fetchHourlyForecast(cityNameText)
+		})
 	} else {
 		alert('You have reached the maximum number of cities')
 	}

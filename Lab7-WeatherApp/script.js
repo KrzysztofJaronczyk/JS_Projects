@@ -21,31 +21,15 @@ let myChart = null
 
 const getWeather = e => {
 	const inputElement = e.target
-	const city = inputElement.value
+	const city = inputElement.value.trim()
 	const URL = API_LINK + city + API_KEY + API_UNITS
 
 	axios
 		.get(URL)
 		.then(res => {
-			const container = inputElement.closest('.container')
-			const cityName = container.querySelector('.city-name')
-			const weather = container.querySelector('.weather')
-			const temperature = container.querySelector('.temperature')
-			const humidity = container.querySelector('.humidity')
-			const photo = container.querySelector('.photo')
-			const warning = container.querySelector('.warning')
-
 			const temp = res.data.main.temp
 			const hum = res.data.main.humidity
 			const status = Object.assign({}, ...res.data.weather)
-
-			cityName.textContent = res.data.name
-			temperature.textContent = Math.floor(temp) + '°C'
-			humidity.textContent = hum + '%'
-			weather.textContent = status.main
-			photo.src = checkWeatherIcon(status.main)
-			warning.textContent = ''
-			e.target.value = ''
 
 			const weatherData = {
 				city: res.data.name,
@@ -53,17 +37,50 @@ const getWeather = e => {
 				humidity: hum,
 				weather: status.main,
 				icon: checkWeatherIcon(status.main),
-				lastUpdated: Date.now(), // Timestamp of the update
+				lastUpdated: Date.now(),
 			}
 
-			// Add to savedCities and save to localStorage
-			savedCities.push(weatherData)
-			localStorage.setItem('savedCities', JSON.stringify(savedCities))
+			const container = inputElement.closest('.container')
+			const cityNameElement = container.querySelector('.city-name')
+			const previousCityName = cityNameElement.textContent
+
+			updateCityWeatherUI(container, weatherData)
+			updateSavedCitiesArray(previousCityName, weatherData)
+
+			inputElement.value = ''
 		})
 		.catch(() => {
 			const warning = inputElement.nextElementSibling
 			warning.textContent = 'Enter the correct city name'
 		})
+}
+
+function updateCityWeatherUI(container, weatherData) {
+	const cityName = container.querySelector('.city-name')
+	const weather = container.querySelector('.weather')
+	const temperature = container.querySelector('.temperature')
+	const humidity = container.querySelector('.humidity')
+	const photo = container.querySelector('.photo')
+
+	cityName.textContent = weatherData.city
+	temperature.textContent = `${weatherData.temp}°C`
+	humidity.textContent = `${weatherData.humidity}%`
+	weather.textContent = weatherData.weather
+	photo.src = weatherData.icon
+}
+
+function updateSavedCitiesArray(previousCityName, newWeatherData) {
+	const cityIndex = savedCities.findIndex(city => city.city === previousCityName)
+
+	if (cityIndex !== -1) {
+		// City exists, update its data
+		savedCities[cityIndex] = newWeatherData
+	} else {
+		// New city, add to the array
+		savedCities.push(newWeatherData)
+	}
+
+	localStorage.setItem('savedCities', JSON.stringify(savedCities))
 }
 
 function fetchHourlyForecast(cityName) {
@@ -123,7 +140,6 @@ function updateWeatherForSavedCities() {
 					lastUpdated: Date.now(),
 				}
 
-				// Immediately update localStorage after each city's data is updated
 				localStorage.setItem('savedCities', JSON.stringify(savedCities))
 
 				// Update UI for each city
