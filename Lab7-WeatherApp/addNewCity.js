@@ -64,10 +64,9 @@ function addNewCity() {
 		// Initialize Google Places Autocomplete for the new input
 		initAutocomplete(input)
 
-		// Add event listener to the chart icon for fetching and displaying hourly forecast
 		const chartIcon = container.querySelector('.fa-chart-simple')
 		chartIcon.addEventListener('click', () => {
-			const cityNameText = cityName.textContent || input.value // Use the city name if available, or fall back to input value
+			const cityNameText = cityName.textContent || input.value
 			fetchHourlyForecast(cityNameText)
 		})
 	} else {
@@ -97,12 +96,12 @@ function displayCity(cityData) {
             <div class="main-info">
                 <div>
                     <h3 class="city-name">${cityData.city || ''}</h3>
-					<input type="text" placeholder="Enter city name...">	
+                    <input type="text" class="google-places-autocomplete" placeholder="Enter city name...">
                     <p class="warning"></p>
                 </div>
                 <img src="${cityData.icon || './img/unknown.png'}" alt="Weather icon" class="photo">
             </div>
-			<p class="date-time-update">Updated: ${new Date(cityData.lastUpdated).toLocaleString() || 'Never'}</p>
+            <p class="date-time-update">Updated: ${new Date(cityData.lastUpdated).toLocaleString() || 'Never'}</p>
         </div>
         <div class="bottom">
             <div class="headings">
@@ -114,10 +113,13 @@ function displayCity(cityData) {
                 <p class="weather">${cityData.weather || ''}</p>
                 <p class="temperature">${cityData.temp ? cityData.temp + '°C' : ''}</p>
                 <p class="humidity">${cityData.humidity ? cityData.humidity + '%' : ''}</p>
-				<i class="fa-solid fa-chart-simple"></i>
+                <i class="fa-solid fa-chart-simple"></i>
             </div>
         </div>
     `
+
+	const input = container.querySelector('.google-places-autocomplete')
+	initAutocomplete(input)
 
 	if (!container.hasEventListener) {
 		const deleteBtn = container.querySelector('.fa-circle-xmark')
@@ -128,8 +130,8 @@ function displayCity(cityData) {
 		})
 		container.hasEventListener = true
 	}
-	const chartBtn = container.querySelector('.fa-chart-simple')
 
+	const chartBtn = container.querySelector('.fa-chart-simple')
 	chartBtn.onclick = () => {
 		fetchHourlyForecast(cityData.city)
 	}
